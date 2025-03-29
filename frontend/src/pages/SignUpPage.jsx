@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import { Eye, EyeOff, Loader2, Lock, Mail, MessageSquare, User } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-import toast from "react-hot-toast";
 import AuthImagePattern from "../components/AuthImagePattern";
+import toast from "react-hot-toast";
 
 const SignUpPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -15,7 +15,6 @@ const SignUpPage = () => {
   });
 
   const { signup, isSigningUp } = useAuthStore();
-  const navigate = useNavigate();
 
   const validateForm = () => {
     if (!formData.fullName.trim()) return toast.error("Full name is required");
@@ -27,16 +26,14 @@ const SignUpPage = () => {
     return true;
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-  
-    if (!validateForm()) return;  // Ensure validation before calling signup
-  
-    const success = await signup(formData);
-    if (success) navigate("/");
+
+    const success = validateForm();
+
+    if (success === true) signup(formData);
   };
 
-  
   return (
     <div className="min-h-screen grid lg:grid-cols-2">
       {/* left side */}
@@ -46,10 +43,10 @@ const SignUpPage = () => {
           <div className="text-center mb-8">
             <div className="flex flex-col items-center gap-2 group">
               <div
-                className="size-12 rounded-xl bg-yellow-500 flex items-center justify-center 
+                className="size-12 rounded-xl bg-primary/10 flex items-center justify-center 
               group-hover:bg-primary/20 transition-colors"
               >
-                <MessageSquare className="size-6 text-white" />
+                <MessageSquare className="size-6 text-primary" />
               </div>
               <h1 className="text-2xl font-bold mt-2">Create Account</h1>
               <p className="text-base-content/60">Get started with your free account</p>
@@ -68,7 +65,7 @@ const SignUpPage = () => {
                 <input
                   type="text"
                   className={`input input-bordered w-full pl-10`}
-                  placeholder="Kashmiri Apple"
+                  placeholder="John Doe"
                   value={formData.fullName}
                   onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                 />
@@ -86,7 +83,7 @@ const SignUpPage = () => {
                 <input
                   type="email"
                   className={`input input-bordered w-full pl-10`}
-                  placeholder="apple@gmail.com"
+                  placeholder="you@example.com"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 />
@@ -122,7 +119,7 @@ const SignUpPage = () => {
               </div>
             </div>
 
-            <button type="submit" className="btn btn-primary w-full bg-yellow-500 text-black" disabled={isSigningUp}>
+            <button type="submit" className="btn btn-primary w-full" disabled={isSigningUp}>
               {isSigningUp ? (
                 <>
                   <Loader2 className="size-5 animate-spin" />
@@ -137,7 +134,7 @@ const SignUpPage = () => {
           <div className="text-center">
             <p className="text-base-content/60">
               Already have an account?{" "}
-              <Link to="/login" className="link link-primary text-yellow-300">
+              <Link to="/login" className="link link-primary">
                 Sign in
               </Link>
             </p>
@@ -146,9 +143,11 @@ const SignUpPage = () => {
       </div>
 
       {/* right side */}
-      <AuthImagePattern 
-      title="Join our community"
-      subtitle="Connect with friends, share moments, and stay in touch with your loved ones."/>      
+
+      <AuthImagePattern
+        title="Join our community"
+        subtitle="Connect with friends, share moments, and stay in touch with your loved ones."
+      />
     </div>
   );
 };
